@@ -13,13 +13,13 @@ class Scrub:
 				print("\nConfiguration does not exist in current directory.")
 		self.copyList = [] # Will be used to store lines and to update changes made.
 						   # It is used as a sort of temporary line editor.
-		self.IPs = {}
-		self.ipNum = 0
+		self.IPs = {} # Dictionary of IP addresses
+		self.ipNum = 0 # Number of IP addresses on IPss
 		self.menu() # Intiate user menu.
 
 	def menu(self):
 		quit = 0
-		userMenu = ["Description:		de", "IP Address:		ad", "Key-string:		ks", "Password:		pw",
+		userMenu = ["Description:		de", "IP Address:		ip", "Key-string:		ks", "Password:		pw",
 			"Snmp-server:		ss", "Display original:	do", "Display scrubbed:	ds", "Quit:			qu\n"]
 		while quit == 0: # Continue until user decides to quit.
 			print("\nType in data type to scrub or an action to complete using the menu below:\n")
@@ -37,7 +37,7 @@ class Scrub:
 				else:
 					userMenu[0] = ""
 					self.readFile("description")
-			elif choice == "ad":
+			elif choice == "ip":
 				if (userMenu[1]== ""):
 					print("\nIP addresses were already removed!")
 				else:
@@ -62,7 +62,6 @@ class Scrub:
 					userMenu[3] = ""
 					self.readFile("password")
 			elif choice == "do":
-				#userMenu[5] = ""
 				print("\nDisplaying original configuration: ")
 				self.filetxt.seek(0)
 				print("\n" + self.filetxt.read())
@@ -74,7 +73,6 @@ class Scrub:
 					print("\n" + hidden.read())
 					print("Configuration done.")
 					hidden.close()
-					#userMenu[6] = ""
 				except IOError:
 					print("\nScrubbed configuration file has not been created yet so cannot display.")
 			elif choice == "qu":
@@ -90,8 +88,6 @@ class Scrub:
 		return filename
 
 	def readFile(self, word):
-		i = 0
-
 		# Open or create a file to write content of config file, with hidden revisions
 		hidden = open("Scrubbed_"+ self.filename, 'w')
 
@@ -104,14 +100,18 @@ class Scrub:
 			for line in (self.filetxt): # Since this is the first call, read from original
 										# config file.
 				if "no ip address" in line:
-					continue
+					self.copyList.append(line)
+					hidden.write(line)
 				elif word in line: # Look for key phrase
 					if word == "ip address": # Special case for IP add. since counter is
 											 # needed.
-						key = line.split("ip address ")[1]
-						print(key)
-						i += 1
-						newLine = "**** IP " + str(i) + " ****\n" # Make a hidden IP address.
+						key = line.split("ip address ")[1] # Creates an array
+						value = self.IPs.get(key, None)
+						if value == None:
+							self.ipNum += 1
+							self.IPs[key] = "IP " + str(self.ipNum)
+
+						newLine = "**** " + self.IPs[key] + " REMOVED ****\n"#"**** IP " + str(i) + " ****\n"  Make a hidden IP address.
 					else:
 						newLine = "**** " + word.upper() + " REMOVED ****\n" # Hide content of line.
 					hidden.write(newLine) # Write altered line to the hidden config file.
@@ -125,18 +125,28 @@ class Scrub:
 		else: # Not first call to readFile.
 			for e in range(len(self.copyList)): # Iterate through copyList to copy and
 												# change lines.
-				if word in self.copyList[e]:
-					if word == "ip address":
-						i += 1 # Keeps track of how many IP addresses have been changed.
-						newLine = "**** IP " + str(i) + " ****\n" # Make a hidden IP address.
+				if "no ip address" in self.copyList[e]:
+					hidden.write(self.copyList[e]) # No changes need to be made so use
+												   # what's stored in the list.
+				elif word in self.copyList[e]: # Look for key phrase
+					if word == "ip address": # Special case for IP add. since counter is
+											 # needed.
+						key = (self.copyList[e]).split("ip address ")[1] # Creates an array
+						value = self.IPs.get(key, None)
+						if value == None:
+							self.ipNum += 1
+							self.IPs[key] = "IP " + str(self.ipNum)
+
+						newLine = "**** " + self.IPs[key] + " REMOVED ****\n"#"**** IP " + str(i) + " ****\n"  Make a hidden IP address.
 					else:
 						newLine = "**** " + word.upper() + " REMOVED ****\n"
-					hidden.write(newLine)
+					hidden.write(newLine) # Write altered line to the hidden config file.
 					self.copyList[e] = newLine # Update in the list that this line has been changed
-											   # so that the change is not lost in the next call.
+											   # so that the change is not lost in the next call."""
 				else:
 						hidden.write(self.copyList[e]) # No changes need to be made so use
 													   # what's stored in the list.
+
 		hidden.close()
 
 hideConfig = Scrub() # Creates an instance of the class to begin the program.
