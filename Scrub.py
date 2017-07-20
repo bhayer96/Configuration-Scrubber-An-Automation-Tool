@@ -103,7 +103,9 @@ class Scrub:
 			self.filetxt.seek(0) # Starts at the first byte (byte 0) in the file
 			for line in (self.filetxt): # Since this is the first call, read from original
 										# config file.
-				if word in line: # Look for key phrase
+				if "no ip address" in line:
+					continue
+				elif word in line: # Look for key phrase
 					if word == "ip address": # Special case for IP add. since counter is
 											 # needed.
 						key = line.split("ip address ")[1]
