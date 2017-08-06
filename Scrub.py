@@ -76,6 +76,8 @@ class Scrub:
 				except IOError:
 					print("\nScrubbed configuration file has not been created yet so cannot display.")
 			elif choice == "qu":
+				self.writeIP()
+				print("\nIP mapping has been written to file with the name: " + "IP_Mapping_" + self.filename + "\n")
 				print("\nQuitting program...\n")
 				self.filetxt.close()
 				return
@@ -86,6 +88,13 @@ class Scrub:
 		print("\nPlease enter file name, including the file extension.")
 		filename = raw_input(">>   ")
 		return filename
+
+	def writeIP(self):
+		ipFile = open("IP_Mapping_" + self.filename, 'w')
+		ipFile.write("The IP address placeholders have been mapped to their specific IP addresses below.\n\n")
+
+		for key, value in sorted(self.IPs.items()):
+			ipFile.write(key + ": " + value)
 
 	def readFile(self, word):
 		# Open or create a file to write content of config file, with hidden revisions
@@ -105,13 +114,18 @@ class Scrub:
 				elif word in line: # Look for key phrase
 					if word == "ip address": # Special case for IP add. since counter is
 											 # needed.
-						key = line.split("ip address ")[1] # Creates an array
-						value = self.IPs.get(key, None)
-						if value == None:
+						value = line.split("ip address ")[1]
+						key = ""
+						if value not in self.IPs.values(): # A distinct IP address found
 							self.ipNum += 1
-							self.IPs[key] = "IP " + str(self.ipNum)
-
-						newLine = "**** " + self.IPs[key] + " REMOVED ****\n"#"**** IP " + str(i) + " ****\n"  Make a hidden IP address.
+							key = "IP " + str(self.ipNum)
+							self.IPs[key] = value
+						else:
+							for k in self.IPs:
+								if self.IPs[k] == value:
+									key  = k
+									break
+						newLine = "**** " + key + " REMOVED ****\n"#"**** IP " + str(i) + " ****\n"  Make a hidden IP address.
 					else:
 						newLine = "**** " + word.upper() + " REMOVED ****\n" # Hide content of line.
 					hidden.write(newLine) # Write altered line to the hidden config file.
@@ -131,13 +145,19 @@ class Scrub:
 				elif word in self.copyList[e]: # Look for key phrase
 					if word == "ip address": # Special case for IP add. since counter is
 											 # needed.
-						key = (self.copyList[e]).split("ip address ")[1] # Creates an array
-						value = self.IPs.get(key, None)
-						if value == None:
+						value = (self.copyList[e]).split("ip address ")[1]
+						key = ""
+						if value not in self.IPs.values(): # A distinct IP address found
 							self.ipNum += 1
-							self.IPs[key] = "IP " + str(self.ipNum)
+							key = "IP " + str(self.ipNum)
+							self.IPs[key] = value
+						else:
+							for k in self.IPs:
+								if self.IPs[k] == value:
+									key  = k
+									break
+						newLine = "**** " + key + " REMOVED ****\n"
 
-						newLine = "**** " + self.IPs[key] + " REMOVED ****\n"#"**** IP " + str(i) + " ****\n"  Make a hidden IP address.
 					else:
 						newLine = "**** " + word.upper() + " REMOVED ****\n"
 					hidden.write(newLine) # Write altered line to the hidden config file.
