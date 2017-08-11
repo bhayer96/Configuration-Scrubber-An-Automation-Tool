@@ -49,4 +49,4 @@ Quit:			qu
 
 >>   de
 ```
-Continue playing with menu until you wish to quit. Depending on what you scrubbed, there should be either one or two output files. If you chose to scrub IP addresses, then there will be two new files.
+Continue playing with menu until you wish to quit. Depending on what you scrubbed, there will be either one or two output files. If you chose to scrub IP addresses, then there will be two new files.
