@@ -14,11 +14,11 @@ First, to install Homebrew, run the following on Terminal:
 ```
 $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
-Follow the instructions the script gives you to complete the installation of Homebrew. Once it has been installed,insert the Homebrew directory at the top of your **PATH** environment. To do this, add the following to the bottom of your ~/.profile file.
+Follow the instructions the script gives you to complete the installation of Homebrew. Once it has been installed, insert the Homebrew directory at the top of your **PATH** environment. To do this, add the following to the bottom of your ~/.profile file.
 ```
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 ```
-Now, you can finally install Python 2.7 running the following:
+Install Python 2.7 by running the following:
 ```
 $ brew install python
 ```
