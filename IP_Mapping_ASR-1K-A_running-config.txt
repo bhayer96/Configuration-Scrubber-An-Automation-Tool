@@ -1,8 +1,0 @@
-The IP address placeholders have been mapped to their specific IP addresses below.
-
-IP 1: 192.168.1.1 255.255.255.255
-IP 2: 10.0.0.1 255.255.255.0
-IP 3: 10.5.0.1 255.255.255.0
-IP 4: 10.2.0.1 255.255.255.0
-IP 5: 10.3.0.1 255.255.255.0
-IP 6: 10.83.11.113 255.255.255.0
