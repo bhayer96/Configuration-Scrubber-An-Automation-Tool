@@ -1,5 +1,5 @@
 # Configuration Scrubber: An Automation Tool
-This repository consists of an automation tool that scrubs confidential data from network configurations and some sample input and output for the program. Confidential data could be descriptions, IP addresses, passwords, key-strings, or SNMP-servers. This tool makes the process of scrubbing configurations much quicker and simpler. The first phase of this tool is written to Hide.py, while the second version is written to Scrub.py.
+This repository consists of an automation tool that scrubs customer sensitive data from network configurations and some sample input and output for the program. Sensitive data could be descriptions, IP addresses, passwords, key-strings, or SNMP-servers. This tool makes the process of scrubbing configurations much quicker and simpler. The first phase of this tool is written to Hide.py, while the second version is written to Scrub.py.
 ## Set Up of Environment
 ### Software Requirements
 The Python script has been coded according to Python 2.7.x standards. Some code may cause errors if the script is run in a non-Python 2.7.x based environment. 
